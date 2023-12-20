@@ -21,17 +21,23 @@ def convert_coordinate(coord):
 
 def place_ship(board, ship_size):
     direction = random.choice(['horizontal', 'vertical'])
-    row = random.randint(0, 6 if direction == 'vertical' else 9)
-    col = random.randint(0, 9 if direction == 'horizontal' else 6)
 
-    if direction == 'horizontal' and col + ship_size <= 7 and all(board[row][col + i] == 'O' for i in range(ship_size)):
-        for i in range(ship_size):
-            board[row][col + i] = 'S'
-        return True
-    elif direction == 'vertical' and row + ship_size <= 7 and all(board[row + i][col] == 'O' for i in range(ship_size)):
-        for i in range(ship_size):
-            board[row + i][col] = 'S'
-        return True
+    if direction == 'horizontal':
+        row = random.randint(0, 6)
+        col = random.randint(0, 7 - ship_size)
+        if all(board[row][col+i] == 'O' for i in range(ship_size)):
+            for i in range(ship_size):
+                board[row][col + i] = 'S'
+            return True
+
+    elif direction == 'vertical':
+        row = random.randint(0, 6 - ship_size)
+        col = random.randint(0, 6)
+        if all(board[row+i][col] == 'O' for i in range(ship_size)):
+            for i in range(ship_size):
+                board[row + i][col] = 'S'
+            return True
+
     return False
 
 def place_ships(board):
