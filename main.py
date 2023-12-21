@@ -42,7 +42,7 @@ def place_ship(board, ship_size):
     return False
 
 def place_ships(board):
-    ships = [3, 2, 2, 1, 1, 1, 1]  # корабли
+    ships = [3, 2, 2, 1, 1, 1, 1]  # размеры кораблей
     for ship_size in ships:
         placed = False
         while not placed:
@@ -51,78 +51,76 @@ def place_ships(board):
 def check_hit(board, row, col):
     return board[row][col] == 'S'
 
-
 def check_ship_sunk(board, row, col):
-    """Checks if a ship has been sunk at the given coordinates."""
-
-    ship_size = 1  # Assume a single cell ship to start
+    """Проверяет, потоплен ли корабль по заданным координатам."""
+    
+    ship_size = 1  # Предполагаем, что корабль состоит из одной ячейки
     direction = None
 
-    # Check for horizontal ship
+    # Проверка для горизонтального корабля
     for i in range(col + 1, 7):
         if board[row][i] == 'S':
             ship_size += 1
-            direction = 'horizontal'
+            direction = 'горизонтальный'
         else:
             break
 
     for i in range(col - 1, -1, -1):
         if board[row][i] == 'S':
             ship_size += 1
-            direction = 'horizontal'
+            direction = 'горизонтальный'
         else:
             break
 
-    # Check for vertical ship
+    # Проверка для вертикального корабля
     if direction is None:
         for i in range(row + 1, 7):
             if board[i][col] == 'S':
                 ship_size += 1
-                direction = 'vertical'
+                direction = 'вертикальный'
             else:
                 break
 
         for i in range(row - 1, -1, -1):
             if board[i][col] == 'S':
                 ship_size += 1
-                direction = 'vertical'
+                direction = 'вертикальный'
             else:
                 break
 
-    # Check if all parts of the ship have been hit
-    if direction == 'horizontal':
+    # Проверка, все ли части корабля подбиты
+    if direction == 'горизонтальный':
         for i in range(col, col + ship_size):
             if board[row][i] != 'X':
                 return False
-    elif direction == 'vertical':
+    elif direction == 'вертикальный':
         for i in range(row, row + ship_size):
             if board[i][col] != 'X':
                 return False
 
-    return True  # Ship is sunk
-
+    return True  # Корабль потоплен
 
 def update_board(board, row, col):
-   if board[row][col] == 'S':
-       board[row][col] = '☠️'  # Mark as sunk ship (using a skull emoji for visual distinction)
+    if board[row][col] == 'S':
+        board[row][col] = '☠️'  # Отмечаем потопленный корабль (используем эмодзи черепа для визуального отличия)
 
-       if not any('S' in row for row in board):  # Check if all ships are sunk
-           time.sleep(2)
-           print("Все корабли потоплены!")  # Updated message for all ships sunk
-           return True  # Return True if all ships are sunk
+        if not any('S' in row for row in board):  # Проверка, все ли корабли потоплены
+            time.sleep(2)
+            print("Все корабли потоплены!")  # Обновленное сообщение о потоплении всех кораблей
+            return True  # Возвращаем True, если все корабли потоплены
 
-       print("Ура! Вы попали в корабль!")
-       time.sleep(0.5)
+        print("Ура! Вы попали в корабль!")
+        time.sleep(0.5)
 
-       if check_ship_sunk(board, row, col):  # Check if the specific ship is sunk
-           print("Корабль потоплен!")
-           time.sleep(1)
-   else:
-       board[row][col] = 'M'  # Mark as miss
-       print("Промах! Корабль не подбит.")
-       time.sleep(1)
+        if check_ship_sunk(board, row, col):  # Проверка, потоплен ли конкретный корабль
+            print("Корабль потоплен!")
+            time.sleep(1)
+    else:
+        board[row][col] = 'M'  # Отмечаем промах
+        print("Промах! Корабль не подбит.")
+        time.sleep(1)
 
-   return False  # Return False if not all ships are sunk
+    return False  # Возвращаем False, если не все корабли потоплены
 
 def play_battleship():
     player_name = input("Введите имя на английском языке: ")
@@ -131,7 +129,7 @@ def play_battleship():
 
     place_ships(board)
 
-    shots = 0  # сброс выстрелов для каждой новой игры
+    shots = 0  # обнуляем количество выстрелов для каждой новой игры
 
     while True:
         clear_screen()
@@ -169,7 +167,7 @@ def play_battleship():
     return player_name, shots, play_again
 
 def display_statistics(player_statistics):
-    player_statistics.sort(key=lambda x: x[1])  # Sort by shots taken
+    player_statistics.sort(key=lambda x: x[1])  # Сортируем по количеству выстрелов
     print("\nСтатистика игроков:")
     print("--------------------")
     for i, (name, shots) in enumerate(player_statistics, start=1):
