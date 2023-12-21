@@ -75,7 +75,7 @@ def play_battleship():
 
     place_ships(board)
 
-    shots = 0
+    shots = 0  # сброс выстрелов для каждой новой игры
 
     while True:
         clear_screen()
@@ -106,26 +106,30 @@ def play_battleship():
             clear_screen()
             print_board(board)
             print(f"Поздравляем, {player_name}! Вы потопили все корабли за {shots} выстрелов.")
-            time.sleep(3)
+            time.sleep(2)
             break
 
-    return player_name, shots
+    play_again = input("Хотите начать заново? (yes/no): ").lower()
+    return player_name, shots, play_again
 
-def display_statistics(statistics):
+def display_statistics(player_statistics):
+    player_statistics.sort(key=lambda x: x[1])  # Sort by shots taken
     print("\nСтатистика игроков:")
-    for i, (name, shots) in enumerate(statistics, start=1):
+    print("--------------------")
+    for i, (name, shots) in enumerate(player_statistics, start=1):
         print(f"{i}. {name}: {shots} выстрелов")
 
-if __name__ == "__main__":
+def main():
     player_statistics = []
 
     while True:
-        player_name, shots = play_battleship()
+        player_name, shots, play_again = play_battleship()
         player_statistics.append((player_name, shots))
 
-        play_again = input("Хотите начать заново? (yes/no): ").lower()
-
-        if play_again != 'yes':
+        if play_again == 'no':
             display_statistics(player_statistics)
             print("Thanks for playing! Goodbye.")
             break
+
+if __name__ == "__main__":
+    main()
