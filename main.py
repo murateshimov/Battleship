@@ -58,30 +58,23 @@ def check_hit(board, row, col):
 def update_board(board, row, col):
     if board[row][col] == 'S':
         board[row][col] = 'X'  # попадание
+
         if not any('S' in row for row in board):
+            time.sleep(2)
             return True  # все корабли подбиты
-        else:
-            ship_cells_left = sum(row.count('S') for row in board)
-            if ship_cells_left == 3:
-                print("Поздравляем! Вы уничтожили однопалубный корабль!")
-                time.sleep(2)
-            elif ship_cells_left == 2:
-                print("Поздравляем! Вы подбили двухпалубный корабль!")
-                time.sleep(2)
-            elif ship_cells_left == 1:
-                print("Поздравляем! Вы разрушили трехпалубный корабль!")
-                time.sleep(2)
-            elif ship_cells_left == 0:
-                print("Поздравляем! Вы уничтожили все корабли!")
-                time.sleep(2)
-            else:
-                print("Поздравляем! Вы попали в корабль!")
-                time.sleep(2)
+
+        print("Ура! Вы попали в корабль!")
+        time.sleep(1)
+
     else:
         board[row][col] = 'M'  # промах
         print("Промах! Корабль не подбит.")
         time.sleep(2)
     return False
+
+
+
+
 
 def play_battleship():
     player_name = input("Введите имя на английском языке: ")
