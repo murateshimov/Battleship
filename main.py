@@ -1,6 +1,11 @@
 import os
 import random
+import time
 
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+# Ожидание 1сек при неправильном вводе
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -41,7 +46,7 @@ def place_ship(board, ship_size):
     return False
 
 def place_ships(board):
-    ships = [3, 2, 2, 1, 1, 1, 1]  # Sizes of ships
+    ships = [3, 2, 2, 1, 1, 1, 1]  # корабли
     for ship_size in ships:
         placed = False
         while not placed:
@@ -52,51 +57,55 @@ def check_hit(board, row, col):
 
 def update_board(board, row, col):
     if board[row][col] == 'S':
-        board[row][col] = 'X'  # Hit
+        board[row][col] = 'X'  # попадание
         if not any('S' in row for row in board):
-            return True  # All ships sunk
+            return True  # все коробли подбиты
     else:
-        board[row][col] = 'M'  # Miss
+        board[row][col] = 'M'  # промах
     return False
 
 def play_battleship():
-    player_name = input("Enter your name: ")
+    player_name = input("Введите имя: ")
     board_size = 7
     board = [['O' for _ in range(board_size)] for _ in range(board_size)]
 
     place_ships(board)
 
-    shots = 0  # Reset shots for each new game
+    shots = 0  # сброс выстрелов для каждой новой игры
 
     while True:
         clear_screen()
-        print("Battleship Game")
-        print("----------------")
+        print("    Морской бой")
+        print("  ----------------")
         print_board(board)
-        shot_coord = input("Enter your shot coordinates (e.g., A1): ")
+        shot_coord = input("Введите координаты (пример: A1): ")
 
         if not is_valid_coordinate(shot_coord):
-            print("Invalid input. Please enter a valid coordinate.")
+            print("Неверный ввод. Пожалуйста, введите правильные координаты.")
+            time.sleep(2)
             continue
 
         row, col = convert_coordinate(shot_coord)
 
         if not (0 <= row < board_size and 0 <= col < board_size):
-            print("Invalid coordinates. Shot outside the battlefield.")
+            print("Неверные координаты. Выстрел был за пределами поля боя.")
+            time.sleep(2)
             continue
 
         if board[row][col] in ['X', 'M']:
-            print("You've already shot at this cell. Try again.")
+            print("Вы уже стреляли по этой клетке.")
+            time.sleep(2)
             continue
 
         shots += 1
         if update_board(board, row, col):
             clear_screen()
             print_board(board)
-            print(f"Congratulations, {player_name}! You sank all the ships in {shots} shots.")
+            print(f"Поздравляем, {player_name}! Вы потопили все корабли за {shots} выстрелов.")
+            time.sleep(3)
             break
 
-    play_again = input("Do you want to play again? (yes/no): ").lower()
+    play_again = input("Хотите начать занаво? (yes/no): ").lower()
 
     if not play_again:
         print(f"Thanks for playing, {player_name}! Your score is {shots} shots.")
