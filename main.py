@@ -69,7 +69,7 @@ def update_board(board, row, col):
     else:
         board[row][col] = 'M'  # промах
         print("Промах! Корабль не подбит.")
-        time.sleep(2)
+        time.sleep(1)
     return False
 
 
