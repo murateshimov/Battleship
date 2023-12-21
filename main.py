@@ -51,22 +51,78 @@ def place_ships(board):
 def check_hit(board, row, col):
     return board[row][col] == 'S'
 
+
+def check_ship_sunk(board, row, col):
+    """Checks if a ship has been sunk at the given coordinates."""
+
+    ship_size = 1  # Assume a single cell ship to start
+    direction = None
+
+    # Check for horizontal ship
+    for i in range(col + 1, 7):
+        if board[row][i] == 'S':
+            ship_size += 1
+            direction = 'horizontal'
+        else:
+            break
+
+    for i in range(col - 1, -1, -1):
+        if board[row][i] == 'S':
+            ship_size += 1
+            direction = 'horizontal'
+        else:
+            break
+
+    # Check for vertical ship
+    if direction is None:
+        for i in range(row + 1, 7):
+            if board[i][col] == 'S':
+                ship_size += 1
+                direction = 'vertical'
+            else:
+                break
+
+        for i in range(row - 1, -1, -1):
+            if board[i][col] == 'S':
+                ship_size += 1
+                direction = 'vertical'
+            else:
+                break
+
+    # Check if all parts of the ship have been hit
+    if direction == 'horizontal':
+        for i in range(col, col + ship_size):
+            if board[row][i] != 'X':
+                return False
+    elif direction == 'vertical':
+        for i in range(row, row + ship_size):
+            if board[i][col] != 'X':
+                return False
+
+    return True  # Ship is sunk
+
+
 def update_board(board, row, col):
-    if board[row][col] == 'S':
-        board[row][col] = 'X'  # попадание
+   if board[row][col] == 'S':
+       board[row][col] = '☠️'  # Mark as sunk ship (using a skull emoji for visual distinction)
 
-        if not any('S' in row for row in board):
-            time.sleep(2)
-            return True  # все корабли подбиты
+       if not any('S' in row for row in board):  # Check if all ships are sunk
+           time.sleep(2)
+           print("Все корабли потоплены!")  # Updated message for all ships sunk
+           return True  # Return True if all ships are sunk
 
-        print("Ура! Вы попали в корабль!")
-        time.sleep(0.5)
+       print("Ура! Вы попали в корабль!")
+       time.sleep(0.5)
 
-    else:
-        board[row][col] = 'M'  # промах
-        print("Промах! Корабль не подбит.")
-        time.sleep(1)
-    return False
+       if check_ship_sunk(board, row, col):  # Check if the specific ship is sunk
+           print("Корабль потоплен!")
+           time.sleep(1)
+   else:
+       board[row][col] = 'M'  # Mark as miss
+       print("Промах! Корабль не подбит.")
+       time.sleep(1)
+
+   return False  # Return False if not all ships are sunk
 
 def play_battleship():
     player_name = input("Введите имя на английском языке: ")
@@ -128,7 +184,7 @@ def main():
 
         if play_again == 'no':
             display_statistics(player_statistics)
-            print("Thanks for playing! Goodbye.")
+            print("Спасибо за игру!")
             break
 
 if __name__ == "__main__":
