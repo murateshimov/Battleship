@@ -5,10 +5,6 @@ import time
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# Ожидание 1сек при неправильном вводе
-def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
 def print_board(board):
     print("   A B C D E F G")
     print("  ----------------")
@@ -64,17 +60,13 @@ def update_board(board, row, col):
             return True  # все корабли подбиты
 
         print("Ура! Вы попали в корабль!")
-        time.sleep(1)
+        time.sleep(0.5)
 
     else:
         board[row][col] = 'M'  # промах
         print("Промах! Корабль не подбит.")
         time.sleep(1)
     return False
-
-
-
-
 
 def play_battleship():
     player_name = input("Введите имя на английском языке: ")
@@ -83,7 +75,7 @@ def play_battleship():
 
     place_ships(board)
 
-    shots = 0  # сброс выстрелов для каждой новой игры
+    shots = 0
 
     while True:
         clear_screen()
@@ -117,12 +109,23 @@ def play_battleship():
             time.sleep(3)
             break
 
-    play_again = input("Хотите начать занаво? (yes/no): ").lower()
+    return player_name, shots
 
-    if not play_again:
-        print(f"Thanks for playing, {player_name}! Your score is {shots} shots.")
-    return play_again == 'yes'
+def display_statistics(statistics):
+    print("\nСтатистика игроков:")
+    for i, (name, shots) in enumerate(statistics, start=1):
+        print(f"{i}. {name}: {shots} выстрелов")
 
 if __name__ == "__main__":
-    while play_battleship():
-        pass
+    player_statistics = []
+
+    while True:
+        player_name, shots = play_battleship()
+        player_statistics.append((player_name, shots))
+
+        play_again = input("Хотите начать заново? (yes/no): ").lower()
+
+        if play_again != 'yes':
+            display_statistics(player_statistics)
+            print("Thanks for playing! Goodbye.")
+            break
